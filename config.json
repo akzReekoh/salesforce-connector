@@ -1,0 +1,33 @@
+{
+  "username": {
+	"label": "Username",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce Account Username"
+  },
+  "password": {
+	"label": "Password",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce Account Password"
+  },
+  "clientId": {
+	"label": "Client ID",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce OAuth2 client ID"
+  },
+  "clientSecret": {
+	"label": "Client Secret",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce OAuth2 client secret"
+  },
+  "redirectUri": {
+	"label": "Redirect URI",
+	"type": "String",
+	"required": true,
+	"help": "Callback URI"
+
+  }
+}
