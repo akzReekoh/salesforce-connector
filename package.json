@@ -1,0 +1,26 @@
+{
+  "name": "salesforce-connector",
+  "description": "Salesforce Connector for the Reekoh IoT Platform. ",
+  "version": "0.0.1",
+  "author": "Reekoh, Inc.",
+  "main": "app.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Reekoh/salesforce-connector"
+  },
+  "dependencies": {
+    "node-salesforce":"0.8.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-cli": "^0.3.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-jsonlint": "^1.1.1",
+    "gulp-mocha": "^2.1.3",
+    "gulp-plumber": "^1.0.1",
+    "mocha": "^2.3.3"
+  }
+}
