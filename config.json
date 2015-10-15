@@ -11,6 +11,14 @@
 	"required": true,
 	"help": "Salesforce Account Password"
   },
+  "loginUrl": {
+	"label": "Login URL",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce Login URL"
+  },
+  //when using OAuth2 and a different app in salesforce
+  //uncomment the lines of codes below
   "clientId": {
 	"label": "Client ID",
 	"type": "String",

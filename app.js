@@ -1,23 +1,47 @@
 'use strict';
 
 var platform = require('./platform'),
+	async = require('async'),
 	sf = require('node-salesforce'),
-	accessToken, instanceUrl;
+	username, password, loginUrl, accessToken, instanceUrl;
 
 /*
  * Listen for the data event.
  */
 platform.on('data', function (data) {
 
-	// TODO: Send data outbound to the other platform, service or app here.
+	// If using OAuth2, uncomment the line of codes below
+	//var conn = new sf.Connection({
+	//	instanceUrl: instanceUrl,
+	//	accessToken: accessToken
+	//});
+    //
+	//conn.sobject(data.objectName).create(data.objectProps, function (err, ret) {
+    //
+	//});
+
+	//If using normal login
 	var conn = new sf.Connection({
-		instanceUrl: instanceUrl,
-		accessToken: accessToken
+
+		loginUrl: loginUrl
 	});
 
-	conn.sobject(data.objectName).create(data.objectProps, function (err, ret) {
+	async.series([
 
-	});
+		function (cb) {
+			conn.login(username, password, function (err, userInfo) {
+				cb(null, userInfo);
+			});
+		},
+
+		function (cb) {
+			conn.sobject(data.objectName).create(data.objectProps, function (err, ret) {
+				cb(null, ret);
+			});
+		}
+
+	], callback);
+
 	console.log(data);
 });
 
@@ -26,22 +50,29 @@ platform.on('data', function (data) {
  */
 platform.once('ready', function (options) {
 
-	var conn = new sf.Connection({
-		oauth2: {
-			clientId: options.clientId,
-			clientSecret: options.clientSecret,
-			redirectUri: options.redirectUri
-		}
-	});
+	//If using OAuth2, uncomment the line of codes below
+	//var conn = new sf.Connection({
+	//	oauth2: {
+	//		clientId: options.clientId,
+	//		clientSecret: options.clientSecret,
+	//		redirectUri: options.redirectUri
+	//	}
+	//});
+    //
+	//conn.login(options.username, options.password, function (err, userInfo) {
+    //
+	//	if (err)
+	//		console.log(err);
+    //
+	//	accessToken = conn.accessToken;
+	//	instanceUrl = conn.instanceUrl;
+	//});
 
-	conn.login(options.username, options.password, function (err, userInfo) {
 
-		if (err)
-			console.log(err);
-
-		accessToken = conn.accessToken;
-		instanceUrl = conn.instanceUrl;
-	});
+	//If using normal login, just initialize the username and passoword
+	username = options.username;
+	password = options.password;
+	loginUrl = options.loginUrl;
 
 	console.log(options);
 	platform.notifyReady();

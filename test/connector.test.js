@@ -34,13 +34,21 @@ describe('Connector', function () {
 				type: 'ready',
 				data: {
 					options: {
-						username: '',
-						password: '',
-						clientId: '',
-						clientSecret: '',
-						redirectUri: ''
+						username: 'ncanoizado@barhead.ph',
+						password: 'r33K0h321',
+						loginUrl: 'https://ap2.salesforce.com'
 					}
 				}
+				//data: {
+				//	options: {
+				//		username: '',
+				//		password: '',
+				//		loginUrl: '',
+				//		clientId: '',
+				//		clientSecret: '',
+				//		redirectUri: ''
+				//	}
+				//}
 			}, function (error) {
 				assert.ifError(error);
 			});
@@ -52,23 +60,29 @@ describe('Connector', function () {
 			connector.send({
 				type: 'data',
 				data: {
-					objectName: 'AirQuality',
+					objectName: 'Account',
 					objectProps: {
-						cbsa: '',
-						co_1hr: '',
-						co_8hr: '',
-						no2_1hr: '',
-						no_annual: '',
-						o3_1hr: '',
-						o3_8hr: '',
-						so2_1hr: '',
-						so2_24hr: '',
-						so2_annual: '',
-						pm2: '',
-						pm10: '',
-                        lead: ''
+						Name: 'Salesforce Account#1'
 					}
 				}
+				//data: {
+				//	objectName: 'AirQuality',
+				//	objectProps: {
+				//		cbsa: '',
+				//		co_1hr: '',
+				//		co_8hr: '',
+				//		no2_1hr: '',
+				//		no_annual: '',
+				//		o3_1hr: '',
+				//		o3_8hr: '',
+				//		so2_1hr: '',
+				//		so2_24hr: '',
+				//		so2_annual: '',
+				//		pm2: '',
+				//		pm10: '',
+                 //       lead: ''
+				//	}
+
 			}, done);
 		});
 	});
