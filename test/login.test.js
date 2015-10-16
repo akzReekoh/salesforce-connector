@@ -11,7 +11,7 @@ var async = require('async'),
     data = {
         objectName: 'Account',
         objectProps: {
-            Name: 'Salesforce Account#2'
+            Name: 'Salesforce Account#3 ThroughAPI'
         }
     };
 
@@ -31,7 +31,7 @@ async.series([
             else {
 
                 cb(null, userInfo);
-                console,log('UserInfo ' + userInfo);
+                console.log('UserInfo ' + userInfo);
             }
         });
     },
