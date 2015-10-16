@@ -11,23 +11,17 @@
 	"required": true,
 	"help": "Salesforce Account Password"
   },
-  "clientId": {
-	"label": "Client ID",
+  "loginUrl": {
+	"label": "Login URL",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce OAuth2 client ID"
+	"help": "Salesforce Login URL"
   },
-  "clientSecret": {
-	"label": "Client Secret",
+  "securityToken": {
+	"label": "Security Token",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce OAuth2 client secret"
-  },
-  "redirectUri": {
-	"label": "Redirect URI",
-	"type": "String",
-	"required": true,
-	"help": "Callback URI"
-
+	"help": "Salesforce Security Token"
   }
+
 }

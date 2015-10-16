@@ -12,6 +12,7 @@
     "url": "https://github.com/Reekoh/salesforce-connector"
   },
   "dependencies": {
+    "async": "^1.4.2",
     "node-salesforce":"0.8.0"
   },
   "devDependencies": {
