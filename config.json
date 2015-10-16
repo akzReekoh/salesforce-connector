@@ -17,25 +17,32 @@
 	"required": true,
 	"help": "Salesforce Login URL"
   },
+  "securityToken": {
+	"label": "Security Token",
+	"type": "String",
+	"required": true,
+	"help": "Salesforce Security Token"
+  }
+  //,
   //when using OAuth2 and a different app in salesforce
   //uncomment the lines of codes below
-  "clientId": {
-	"label": "Client ID",
-	"type": "String",
-	"required": true,
-	"help": "Salesforce OAuth2 client ID"
-  },
-  "clientSecret": {
-	"label": "Client Secret",
-	"type": "String",
-	"required": true,
-	"help": "Salesforce OAuth2 client secret"
-  },
-  "redirectUri": {
-	"label": "Redirect URI",
-	"type": "String",
-	"required": true,
-	"help": "Callback URI"
-
-  }
+//  "clientId": {
+//	"label": "Client ID",
+//	"type": "String",
+//	"required": true,
+//	"help": "Salesforce OAuth2 client ID"
+//  },
+//  "clientSecret": {
+//	"label": "Client Secret",
+//	"type": "String",
+//	"required": true,
+//	"help": "Salesforce OAuth2 client secret"
+//  },
+//  "redirectUri": {
+//	"label": "Redirect URI",
+//	"type": "String",
+//	"required": true,
+//	"help": "Callback URI"
+//
+//  }
 }

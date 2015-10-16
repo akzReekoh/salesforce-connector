@@ -3,7 +3,7 @@
 var platform = require('./platform'),
 	async = require('async'),
 	sf = require('node-salesforce'),
-	username, password, loginUrl, accessToken, instanceUrl;
+	username, password, loginUrl, securityToken, accessToken, instanceUrl;
 
 /*
  * Listen for the data event.
@@ -29,7 +29,7 @@ platform.on('data', function (data) {
 	async.series([
 
 		function (cb) {
-			conn.login(username, password, function (err, userInfo) {
+			conn.login(username, password + securityToken, function (err, userInfo) {
 				cb(null, userInfo);
 			});
 		},
@@ -40,7 +40,9 @@ platform.on('data', function (data) {
 			});
 		}
 
-	], callback);
+	], function (err, results) {
+
+	});
 
 	console.log(data);
 });
@@ -59,7 +61,7 @@ platform.once('ready', function (options) {
 	//	}
 	//});
     //
-	//conn.login(options.username, options.password, function (err, userInfo) {
+	//conn.login(options.username, options.password + options.securityToken, function (err, userInfo) {
     //
 	//	if (err)
 	//		console.log(err);
@@ -73,6 +75,7 @@ platform.once('ready', function (options) {
 	username = options.username;
 	password = options.password;
 	loginUrl = options.loginUrl;
+	securityToken = options.securityToken;
 
 	console.log(options);
 	platform.notifyReady();

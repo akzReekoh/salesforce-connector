@@ -34,9 +34,10 @@ describe('Connector', function () {
 				type: 'ready',
 				data: {
 					options: {
-						username: 'ncanoizado@barhead.ph',
+						username: 'ncanonizado@barhead.ph',
 						password: 'r33K0h321',
-						loginUrl: 'https://ap2.salesforce.com'
+						loginUrl: 'https://login.salesforce.com',
+						securityToken: 'zmkqhovKV5ZeQ6RNrCNeGMofq'
 					}
 				}
 				//data: {
