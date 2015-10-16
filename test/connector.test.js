@@ -34,10 +34,10 @@ describe('Connector', function () {
 				type: 'ready',
 				data: {
 					options: {
-						username: 'ncanonizado@barhead.ph',
+						username: 'nigelec@gmail.com',
 						password: 'r33K0h321',
 						loginUrl: 'https://login.salesforce.com',
-						securityToken: 'zmkqhovKV5ZeQ6RNrCNeGMofq'
+						securityToken: 'XkWZ26HVYAiUFVmr2Efu9ion'
 					}
 				}
 				//data: {
