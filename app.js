@@ -1,82 +1,40 @@
 'use strict';
 
-var platform = require('./platform'),
-	async = require('async'),
-	sf = require('node-salesforce'),
-	username, password, loginUrl, securityToken, accessToken, instanceUrl;
+var isJSON   = require('is-json'),
+	platform = require('./platform'),
+	conn, objectName;
 
 /*
  * Listen for the data event.
  */
 platform.on('data', function (data) {
-
-	// If using OAuth2, uncomment the line of codes below
-	//var conn = new sf.Connection({
-	//	instanceUrl: instanceUrl,
-	//	accessToken: accessToken
-	//});
-    //
-	//conn.sobject(data.objectName).create(data.objectProps, function (err, ret) {
-    //
-	//});
-
-	//If using normal login
-	var conn = new sf.Connection({
-
-		loginUrl: loginUrl
-	});
-
-	async.series([
-
-		function (cb) {
-			conn.login(username, password + securityToken, function (err, userInfo) {
-				cb(null, userInfo);
-			});
-		},
-
-		function (cb) {
-			conn.sobject(data.objectName).create(data.objectProps, function (err, ret) {
-				cb(null, ret);
-			});
-		}
-
-	], function (err, results) {
-
-	});
-
-	console.log(data);
+	if (isJSON(data, true)) {
+		conn.sobject(objectName).create(data, function (error) {
+			if (error) platform.handleException(error);
+		});
+	}
+	else
+		platform.handleException(new Error('Invalid input data. ' + data));
 });
 
 /*
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
+	var config  = require('./config.json'),
+		jsforce = require('jsforce');
 
-	//If using OAuth2, uncomment the line of codes below
-	//var conn = new sf.Connection({
-	//	oauth2: {
-	//		clientId: options.clientId,
-	//		clientSecret: options.clientSecret,
-	//		redirectUri: options.redirectUri
-	//	}
-	//});
-    //
-	//conn.login(options.username, options.password + options.securityToken, function (err, userInfo) {
-    //
-	//	if (err)
-	//		console.log(err);
-    //
-	//	accessToken = conn.accessToken;
-	//	instanceUrl = conn.instanceUrl;
-	//});
+	var password = ''.concat(options.password).concat(options.security_token);
+	objectName = options.object_name;
 
+	conn = new jsforce.Connection({
+		loginUrl: options.login_url || config.login_url.default
+	});
 
-	//If using normal login, just initialize the username and passoword
-	username = options.username;
-	password = options.password;
-	loginUrl = options.loginUrl;
-	securityToken = options.securityToken;
+	conn.login(options.username, password, function (error) {
+		if (error) return platform.handleException(error);
 
-	console.log(options);
-	platform.notifyReady();
+		platform.log('Salesforce Connector initialized.');
+		platform.notifyReady();
+	});
 });
