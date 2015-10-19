@@ -3,25 +3,31 @@
 	"label": "Username",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce Account Username"
+	"help": "Salesforce Account Username."
   },
   "password": {
 	"label": "Password",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce Account Password"
+	"help": "Salesforce Account Password."
   },
-  "loginUrl": {
-	"label": "Login URL",
+  "object_name": {
+	"label": "Object Name",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce Login URL"
+	"help": "The name of the Salesforce object or record to create/insert."
   },
-  "securityToken": {
+  "security_token": {
 	"label": "Security Token",
 	"type": "String",
-	"required": true,
-	"help": "Salesforce Security Token"
+	"required": false,
+	"help": "(Optional) Salesforce Security Token."
+  },
+  "login_url": {
+	"label": "Login URL",
+	"type": "String",
+	"required": false,
+	"default": "https://login.salesforce.com",
+	"help": "(Optional) Salesforce Login URL. Default: https://login.salesforce.com"
   }
-
 }
