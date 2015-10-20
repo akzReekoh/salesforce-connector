@@ -10,11 +10,18 @@ var isJSON   = require('is-json'),
 platform.on('data', function (data) {
 	if (isJSON(data, true)) {
 		conn.sobject(objectName).create(data, function (error) {
-			if (error) platform.handleException(error);
+			if (error)
+				platform.handleException(error);
+			else {
+				platform.log(JSON.stringify({
+					title: 'Salesforce data inserted.',
+					data: data
+				}));
+			}
 		});
 	}
 	else
-		platform.handleException(new Error('Invalid input data. ' + data));
+		platform.handleException(new Error('Invalid data received. ' + data));
 });
 
 /*
