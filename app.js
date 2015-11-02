@@ -15,6 +15,7 @@ platform.on('data', function (data) {
 			else {
 				platform.log(JSON.stringify({
 					title: 'Salesforce data inserted.',
+					object: objectName,
 					data: data
 				}));
 			}
