@@ -2,23 +2,27 @@
 
 var isJSON   = require('is-json'),
 	platform = require('./platform'),
-	conn, objectName;
+	conn, objectName, username, password;
 
 /*
  * Listen for the data event.
  */
 platform.on('data', function (data) {
 	if (isJSON(data, true)) {
-		conn.sobject(objectName).create(data, function (error) {
-			if (error)
-				platform.handleException(error);
-			else {
-				platform.log(JSON.stringify({
-					title: 'Salesforce data inserted.',
-					object: objectName,
-					data: data
-				}));
-			}
+		conn.login(username, password, function (loginError) {
+			if (loginError) return platform.handleException(loginError);
+
+			conn.sobject(objectName).create(data, function (insertError) {
+				if (insertError)
+					platform.handleException(insertError);
+				else {
+					platform.log(JSON.stringify({
+						title: 'Salesforce data inserted.',
+						object: objectName,
+						data: data
+					}));
+				}
+			});
 		});
 	}
 	else
@@ -52,17 +56,14 @@ platform.once('ready', function (options) {
 	var config  = require('./config.json'),
 		jsforce = require('jsforce');
 
-	var password = ''.concat(options.password).concat(options.security_token);
+	username = options.username;
+	password = ''.concat(options.password).concat(options.security_token);
 	objectName = options.object_name;
 
 	conn = new jsforce.Connection({
 		loginUrl: options.login_url || config.login_url.default
 	});
 
-	conn.login(options.username, password, function (error) {
-		if (error) return platform.handleException(error);
-
-		platform.log('Salesforce Connector initialized.');
-		platform.notifyReady();
-	});
+	platform.log('Salesforce Connector initialized.');
+	platform.notifyReady();
 });
