@@ -12,6 +12,7 @@
     "url": "https://github.com/Reekoh/salesforce-connector"
   },
   "dependencies": {
+    "async": "^1.4.2",
     "is-json": "^1.2.5",
     "jsforce": "^1.5.0"
   },
