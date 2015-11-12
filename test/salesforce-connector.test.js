@@ -1,8 +1,8 @@
 'use strict';
 
-const USER_NAME      = 'nigelec@gmail.com',
-	  PASSWORD       = 'r33K0h321',
-	  SECURITY_TOKEN = 'XkWZ26HVYAiUFVmr2Efu9ion',
+const USER_NAME      = 'rbanquerigo@reekoh.com',
+	  PASSWORD       = 'nigel123',
+	  SECURITY_TOKEN = 'Qqg7vdHHsdfBE0VW7GznPTpn8',
 	  OBJECT_NAME    = 'Account';
 
 var _      = require('lodash'),
