@@ -43,6 +43,17 @@ platform.on('data', function (data) {
 						cb(null)
 					}
 				});
+			},
+
+			function (cb) {
+
+				conn.logout(function (error) {
+
+					if (err)
+						platform.handleException(error);
+
+					cb(null);
+				} );
 			}
 
 		]);
