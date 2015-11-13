@@ -1,7 +1,6 @@
 'use strict';
 
 var async = require('async'),
-	isJSON   = require('is-json'),
 	platform = require('./platform'),
 	conn, objectName, username, password;
 
@@ -9,38 +8,47 @@ var async = require('async'),
  * Listen for the data event.
  */
 platform.on('data', function (data) {
-	if (isJSON(data, true)) {
+
+	var domain = require('domain'),
+		d  = domain.create();
+
+
+	d.on('error', function (error) {
+		platform.handleException(error);
+	});
+
+	d.run(function () {
 
 		async.series([
 
-		function (cb) {
-			conn.login(options.username, password, function (error) {
-				if (error) return platform.handleException(error);
+			function (cb) {
+				conn.login(options.username, password, function (error) {
+					if (error) return platform.handleException(error);
 
-				cb(null);
-			});
+					cb(null);
+				});
 
-		},
+			},
 
-		function (cb) {
-			conn.sobject(objectName).create(data, function (error) {
-				if (error)
-					platform.handleException(error);
-				else {
-					platform.log(JSON.stringify({
-						title: 'Salesforce data inserted.',
-						object: objectName,
-						data: data
-					}));
-					cb(null)
-				}
-			});
-		}
+			function (cb) {
+				conn.sobject(objectName).create(data, function (error) {
+					if (error)
+						platform.handleException(error);
+					else {
+						platform.log(JSON.stringify({
+							title: 'Salesforce data inserted.',
+							object: objectName,
+							data: data
+						}));
+						cb(null)
+					}
+				});
+			}
 
 		]);
-	}
-	else
-		platform.handleException(new Error('Invalid data received. ' + data));
+
+	});
+
 });
 
 /*
