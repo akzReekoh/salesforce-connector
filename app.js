@@ -1,63 +1,23 @@
 'use strict';
 
-var async = require('async'),
-	platform = require('./platform'),
-	conn, objectName, username, password;
+var platform = require('./platform'),
+	conn, objectName;
 
 /*
  * Listen for the data event.
  */
 platform.on('data', function (data) {
 
-	var domain = require('domain'),
-		d  = domain.create();
-
-
-	d.on('error', function (error) {
-		platform.handleException(error);
-	});
-
-	d.run(function () {
-
-		async.series([
-
-			function (cb) {
-				conn.login(options.username, password, function (error) {
-					if (error) return platform.handleException(error);
-
-					cb(null);
-				});
-
-			},
-
-			function (cb) {
-				conn.sobject(objectName).create(data, function (error) {
-					if (error)
-						platform.handleException(error);
-					else {
-						platform.log(JSON.stringify({
-							title: 'Salesforce data inserted.',
-							object: objectName,
-							data: data
-						}));
-						cb(null)
-					}
-				});
-			},
-
-			function (cb) {
-
-				conn.logout(function (error) {
-
-					if (err)
-						platform.handleException(error);
-
-					cb(null);
-				} );
-			}
-
-		]);
-
+	conn.sobject(objectName).create(data, function (error) {
+		if (error)
+			platform.handleException(error);
+		else {
+			platform.log(JSON.stringify({
+				title: 'Salesforce data inserted.',
+				object: objectName,
+				data: data
+			}));
+		}
 	});
 
 });
@@ -89,14 +49,18 @@ platform.once('ready', function (options) {
 	var config  = require('./config.json'),
 		jsforce = require('jsforce');
 
-	username = options.username;
-	password = ''.concat(options.password).concat(options.security_token);
+	var password = ''.concat(options.password).concat(options.security_token);
 	objectName = options.object_name;
 
 	conn = new jsforce.Connection({
 		loginUrl: options.login_url || config.login_url.default
 	});
 
-	platform.log('Salesforce Connector initialized.');
-	platform.notifyReady();
+	conn.login(options.username, password, function (error) {
+		if (error) return platform.handleException(error);
+
+		platform.log('Salesforce Connector initialized.');
+		platform.notifyReady();
+	});
+
 });
