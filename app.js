@@ -1,68 +1,91 @@
 'use strict';
 
-var platform = require('./platform'),
-	conn, objectName;
+var platform      = require('./platform'),
+	async         = require('async'),
+	jsforce       = require('jsforce'),
+	isArray       = require('lodash.isarray'),
+	isPlainObject = require('lodash.isplainobject'),
+	config;
+
+var sendData = function (data, callback) {
+	async.waterfall([
+		(done) => {
+			let conn = new jsforce.Connection({
+				loginUrl: config.login_url
+			});
+
+			conn.login(config.username, config.password, (error) => {
+				done(error, conn);
+			});
+		},
+		(conn, done) => {
+			conn.sobject(config.object_name).create(data, (error) => {
+				done(error, conn);
+			});
+		},
+		(conn, done) => {
+			conn.logout(() => {
+				done();
+			});
+		}
+	], callback);
+};
 
 /*
  * Listen for the data event.
  */
 platform.on('data', function (data) {
+	if (isPlainObject(data)) {
+		sendData(data, (error) => {
+			if (error)
+				platform.handleException(error);
+			else {
+				platform.log(JSON.stringify({
+					title: 'Salesforce data inserted.',
+					object: config.object_name,
+					data: data
+				}));
+			}
+		});
+	}
+	else if (isArray(data)) {
+		async.each(data, (datum, done) => {
+			sendData(datum, (error) => {
+				if (error)
+					platform.handleException(error);
+				else {
+					platform.log(JSON.stringify({
+						title: 'Salesforce data inserted.',
+						object: config.object_name,
+						data: datum
+					}));
+				}
 
-	conn.sobject(objectName).create(data, function (error) {
-		if (error)
-			platform.handleException(error);
-		else {
-			platform.log(JSON.stringify({
-				title: 'Salesforce data inserted.',
-				object: objectName,
-				data: data
-			}));
-		}
-	});
-
+				done();
+			});
+		});
+	}
+	else
+		platform.handleException(new Error(`Invalid data received. Data must be a valid JSON Object or a collection of objects. Data: ${data}`));
 });
 
 /*
  * Event to listen to in order to gracefully release all resources bound to this service.
  */
 platform.on('close', function () {
-	var domain = require('domain');
-	var d = domain.create();
-
-	d.once('error', function(error) {
-		console.error(error);
-		platform.handleException(error);
-		platform.notifyClose();
-		d.exit();
-	});
-
-	d.run(function() {
-		conn.logout(function () {
-			platform.notifyClose();
-			d.exit();
-		});
-	});
+	platform.notifyClose();
 });
 
 /*
  * Listen for the ready event.
  */
 platform.once('ready', function (options) {
-	var config  = require('./config.json'),
-		jsforce = require('jsforce');
+	let password = ''.concat(options.password).concat(options.security_token);
 
-	var password = ''.concat(options.password).concat(options.security_token);
-	objectName = options.object_name;
-
-	conn = new jsforce.Connection({
-		loginUrl: options.login_url || config.login_url.default
+	Object.assign(options, {
+		loginUrl: options.login_url || require('./config.json').login_url.default,
+		password: password
 	});
 
-	conn.login(options.username, password, function (error) {
-		if (error) return platform.handleException(error);
-
-		platform.log('Salesforce Connector initialized.');
-		platform.notifyReady();
-	});
-
+	config = options;
 });

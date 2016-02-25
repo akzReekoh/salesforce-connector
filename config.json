@@ -19,7 +19,7 @@
   },
   "security_token": {
 	"label": "Security Token",
-	"type": "String",
+	"type": "Password",
 	"required": false,
 	"help": "(Optional) Salesforce Security Token."
   },
