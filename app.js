@@ -88,4 +88,6 @@ platform.once('ready', function (options) {
 	});
 
 	config = options;
+	platform.notifyReady();
+	platform.log('Salesforce connector initialized.');
 });
