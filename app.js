@@ -1,93 +1,78 @@
-'use strict';
+'use strict'
 
-var platform      = require('./platform'),
-	async         = require('async'),
-	jsforce       = require('jsforce'),
-	isArray       = require('lodash.isarray'),
-	isPlainObject = require('lodash.isplainobject'),
-	config;
+let reekoh = require('reekoh')
+let _plugin = new reekoh.plugins.Connector()
+let async = require('async')
+let jsforce = require('jsforce')
+let isArray = require('lodash.isarray')
+let isPlainObject = require('lodash.isplainobject')
 
-var sendData = function (data, callback) {
-	async.waterfall([
-		(done) => {
-			let conn = new jsforce.Connection({
-				loginUrl: config.login_url
-			});
+let sendData = (data, callback) => {
+  async.waterfall([
+    (done) => {
+      let conn = new jsforce.Connection({
+        loginUrl: _plugin.config.loginUrl
+      })
 
-			conn.login(config.username, config.password, (error) => {
-				done(error, conn);
-			});
-		},
-		(conn, done) => {
-			conn.sobject(config.object_name).create(data, (error) => {
-				done(error, conn);
-			});
-		},
-		(conn, done) => {
-			conn.logout(() => {
-				done();
-			});
-		}
-	], callback);
-};
+      conn.login(_plugin.config.username, _plugin.config.password, (error) => {
+        done(error, conn)
+      })
+    },
+    (conn, done) => {
+      conn.sobject(_plugin.config.objectName).create(data, (error) => {
+        done(error, conn)
+      })
+    },
+    (conn, done) => {
+      conn.logout(() => {
+        done()
+      })
+    }
+  ], callback)
+}
 
-/*
- * Listen for the data event.
+/**
+ * Emitted when device data is received.
+ * This is the event to listen to in order to get real-time data feed from the connected devices.
+ * @param {object} data The data coming from the device represented as JSON Object.
  */
-platform.on('data', function (data) {
-	if (isPlainObject(data)) {
-		sendData(data, (error) => {
-			if (error)
-				platform.handleException(error);
-			else {
-				platform.log(JSON.stringify({
-					title: 'Salesforce data inserted.',
-					object: config.object_name,
-					data: data
-				}));
-			}
-		});
-	}
-	else if (isArray(data)) {
-		async.each(data, (datum, done) => {
-			sendData(datum, (error) => {
-				if (error)
-					platform.handleException(error);
-				else {
-					platform.log(JSON.stringify({
-						title: 'Salesforce data inserted.',
-						object: config.object_name,
-						data: datum
-					}));
-				}
+_plugin.on('data', (data) => {
+  if (isPlainObject(data)) {
+    sendData(data, (error) => {
+      if (error) _plugin.logException(error)
+      else {
+        _plugin.log(JSON.stringify({
+          title: 'Salesforce data inserted.',
+          object: _plugin.config.objectName,
+          data: data
+        }))
+      }
+    })
+  } else if (isArray(data)) {
+    async.each(data, (datum, done) => {
+      sendData(datum, (error) => {
+        if (error) _plugin.logException(error)
+        else {
+          _plugin.log(JSON.stringify({
+            title: 'Salesforce data inserted.',
+            object: _plugin.config.objectName,
+            data: datum
+          }))
+        }
+        done()
+      })
+    })
+  } else {
+    _plugin.logException(new Error(`Invalid data received. Data must be a valid JSON Object or a collection of objects. Data: ${data}`))
+  }
+})
 
-				done();
-			});
-		});
-	}
-	else
-		platform.handleException(new Error(`Invalid data received. Data must be a valid JSON Object or a collection of objects. Data: ${data}`));
-});
-
-/*
- * Event to listen to in order to gracefully release all resources bound to this service.
+/**
+ * Emitted when the platform bootstraps the plugin. The plugin should listen once and execute its init process.
  */
-platform.on('close', function () {
-	platform.notifyClose();
-});
+_plugin.once('ready', () => {
+  _plugin.log('Salesforce Connector has been initialized.')
+  _plugin.emit('init')
+})
 
-/*
- * Listen for the ready event.
- */
-platform.once('ready', function (options) {
-	let password = ''.concat(options.password).concat(options.security_token);
-
-	Object.assign(options, {
-		loginUrl: options.login_url || require('./config.json').login_url.default,
-		password: password
-	});
-
-	config = options;
-	platform.notifyReady();
-	platform.log('Salesforce connector initialized.');
-});
+module.exports = _plugin

@@ -3,7 +3,8 @@
 	"label": "Username",
 	"type": "String",
 	"required": true,
-	"help": "Salesforce Account Username."
+	"help": "Salesforce Account Username.",
+    "maxLength": 50
   },
   "password": {
 	"label": "Password",
@@ -11,23 +12,26 @@
 	"required": true,
 	"help": "Salesforce Account Password."
   },
-  "object_name": {
+  "objectName": {
 	"label": "Object Name",
 	"type": "String",
 	"required": true,
-	"help": "The name of the Salesforce object or record to create/insert."
+	"help": "The name of the Salesforce object or record to create/insert.",
+    "maxLength": 50
   },
-  "security_token": {
+  "securityToken": {
 	"label": "Security Token",
 	"type": "Password",
 	"required": false,
-	"help": "(Optional) Salesforce Security Token."
+	"help": "(Optional) Salesforce Security Token.",
+    "maxLength": 50
   },
-  "login_url": {
+  "loginUrl": {
 	"label": "Login URL",
 	"type": "String",
 	"required": false,
 	"default": "https://login.salesforce.com",
-	"help": "(Optional) Salesforce Login URL. Default: https://login.salesforce.com"
+	"help": "(Optional) Salesforce Login URL. Default: https://login.salesforce.com",
+    "maxLength": 100
   }
 }
