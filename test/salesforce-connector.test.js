@@ -2,10 +2,10 @@
 
 const amqp = require('amqplib')
 
-const USER_NAME = 'rbanquerigo@reekoh.com'
-const PASSWORD = 'nigel123'
-const SECURITY_TOKEN = 'Qqg7vdHHsdfBE0VW7GznPTpn8'
-const OBJECT_NAME = 'Account'
+const USER_NAME = ''
+const PASSWORD = ''
+const SECURITY_TOKEN = ''
+const OBJECT_NAME = ''
 
 let _channel = null
 let _conn = null
@@ -18,7 +18,8 @@ describe('Salesforce Connector Test', () => {
       username: USER_NAME,
       password: PASSWORD,
       objectName: OBJECT_NAME,
-      securityToken: SECURITY_TOKEN
+      securityToken: SECURITY_TOKEN,
+      loginUrl: 'https://reekoh1.my.salesforce.com/'
     })
     process.env.INPUT_PIPE = 'ip.salesforce'
     process.env.LOGGERS = 'logger1, logger2'
@@ -58,7 +59,7 @@ describe('Salesforce Connector Test', () => {
       }
 
       _channel.sendToQueue('ip.salesforce', new Buffer(JSON.stringify(data)))
-      setTimeout(done, 10000)
+      setTimeout(done, 15000)
     })
   })
 })
