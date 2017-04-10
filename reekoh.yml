@@ -11,38 +11,38 @@ metadata:
   price: 0
   tags:
     - salesforce
-  config:
-    username:
-      label: Username
-      type: String
-      required: true
-      help: Salesforce Account Username.
-      maxLength: 1000
-    password:
-      label: Password
-      type: Password
-      required: true
-      help: Salesforce Account Password.
-    objectName:
-      label: Object Name
-      type: String
-      required: true
-      help: The name of the Salesforce object or record to create/insert.
-      maxLength: 1000
-    securityToken:
-      label: Security Token
-      type: Password
-      required: false
-      help: "(Optional) Salesforce Security Token."
-      maxLength: 1000
-    loginUrl:
-      label: Login URL
-      type: String
-      required: false
-      default: https://login.salesforce.com
-      help: "(Optional) Salesforce Login URL. Default: https://login.salesforce.com"
-      maxLength: 1000
   release:
     version: 1.0.0
     notes: path/to/RELEASENOTESv1.0.0.md
     image: path/to/docker/image
+    config:
+        username:
+          label: Username
+          type: String
+          required: true
+          help: Salesforce Account Username.
+          maxLength: 1000
+        password:
+          label: Password
+          type: Password
+          required: true
+          help: Salesforce Account Password.
+        objectName:
+          label: Object Name
+          type: String
+          required: true
+          help: The name of the Salesforce object or record to create/insert.
+          maxLength: 1000
+        securityToken:
+          label: Security Token
+          type: Password
+          required: false
+          help: "(Optional) Salesforce Security Token."
+          maxLength: 1000
+        loginUrl:
+          label: Login URL
+          type: String
+          required: false
+          default: https://login.salesforce.com
+          help: "(Optional) Salesforce Login URL. Default: https://login.salesforce.com"
+          maxLength: 1000
